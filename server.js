@@ -110,6 +110,13 @@ app.get('/actions', async (req, res) => {
     res.json(actions)
 });
 
+if(process.env.NODE_ENV === 'production') {
+    app.use(express.static('client/build'));
+    app.get(""*"", (req, res) => {
+        res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
+    })
+};
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function(){

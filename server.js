@@ -78,9 +78,9 @@ app.post('/actions', async (req, res) => {
       return;
     }
   
-    const actions = await actions.findOne({ userId: user._id}).exec();
+    const actions = await Actions.findOne({ userId: user._id}).exec();
     if (!actions) {
-      await actions.create({ 
+      await Actions.create({ 
         userId: user._id,
         actions: actionsItems
       });
@@ -106,7 +106,7 @@ app.get('/actions', async (req, res) => {
       return;
     }
   
-    const { actions } = await actions.findOne({ userId: user._id}).exec();  
+    const { actions } = await Actions.findOne({ userId: user._id}).exec();  
     res.json(actions)
 });
 

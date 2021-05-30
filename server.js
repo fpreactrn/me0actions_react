@@ -4,7 +4,7 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
 const Action = require('./models/Action');
-const port = 4009;
+const port = process.env.PORT || 4009;
 
 mongoose.connect(process.env.dbUrl, {
     useUnifiedTopology: true,

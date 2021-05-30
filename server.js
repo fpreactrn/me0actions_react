@@ -2,9 +2,9 @@ const express = require('express');
 const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
+const User = require('./models/User');
+const Action = require('./models/Action');
 const port = 4009;
-
-console.log(process.env.dbUrl);
 
 mongoose.connect(process.env.dbUrl, {
     useUnifiedTopology: true,
@@ -14,37 +14,19 @@ mongoose.connect(process.env.dbUrl, {
       console.log('DB connection failed:'+err);
     }
     else {
-    //   console.log('DB successfully connected to: dbUrl');
+      console.log('DB successfully connected to: dbUrl');
       console.log('DB successfully connected to: '+process.env.dbUrl);
     }
-  });
+  }
+);
   
-  const userSchema = new mongoose.Schema({
-    username: String,
-    password: String
-  });
-  const User = mongoose.model('User', userSchema);
+app.use(express.json());
   
-  const todosSchema = new mongoose.Schema({
-    userId: mongoose.Schema.ObjectId,
-    todos: [
-      {
-        text: String,
-        checked: Boolean,
-        id: String,
-        deleted: Boolean
-      }
-    ]
-  });
-  const Todos = mongoose.model('Todos', todosSchema);
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
   
-  app.use(express.json());
-  
-  app.get('/', (req, res) => {
-    res.send('Hello World');
-  });
-  
-  app.post('/register', async (req, res) => {
+app.post('/register', async (req, res) => {
     const { username, password } = req.body;
   
     const user = await User.findOne({ username }).exec();
@@ -61,9 +43,9 @@ mongoose.connect(process.env.dbUrl, {
       username,
       password
     })
-  });
+});
   
-  app.post('/login', async (req, res) => {
+app.post('/login', async (req, res) => {
     const { username, password } = req.body;
   
     const user = await User.findOne({ username }).exec();
@@ -79,13 +61,13 @@ mongoose.connect(process.env.dbUrl, {
     res.json({
       message: 'logged in'
     })
-  });
+});
   
-  app.post('/todos', async (req, res) => {
+app.post('/actions', async (req, res) => {
     const { authorization } = req.headers;
     const [, token] = authorization.split(" ");
     const [ username, password ] = token.split(":");
-    const todosItems = req.body;
+    const actionsItems = req.body;
     const user = await User.findOne({ username }).exec();
   
     if (!user || user.password !== password){
@@ -96,25 +78,24 @@ mongoose.connect(process.env.dbUrl, {
       return;
     }
   
-    const todos = await Todos.findOne({ userId: user._id}).exec();
-    if (!todos) {
-      await Todos.create({ 
+    const actions = await actions.findOne({ userId: user._id}).exec();
+    if (!actions) {
+      await actions.create({ 
         userId: user._id,
-        todos: todosItems
+        actions: actionsItems
       });
     } else {
-      todos.todos = todosItems;
-      await todos.save();
+      actions.actions = actionsItems;
+      await actions.save();
     }
   
-    res.json(todosItems);
-  });
+    res.json(actionsItems);
+});
   
-  app.get('/todos', async (req, res) => {
+app.get('/actions', async (req, res) => {
     const { authorization } = req.headers;
     const [, token] = authorization.split(" ");
     const [ username, password ] = token.split(":");
-    // const todosItems = req.body;
     const user = await User.findOne({ username }).exec();
   
     if (!user || user.password !== password){
@@ -125,13 +106,9 @@ mongoose.connect(process.env.dbUrl, {
       return;
     }
   
-    const { todos } = await Todos.findOne({ userId: user._id}).exec();  
-    res.json(todos)
-  });
-
-// app.listen(port, () => {
-//   console.log(`Port is listening at: ${port}`);
-// });
+    const { actions } = await actions.findOne({ userId: user._id}).exec();  
+    res.json(actions)
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));

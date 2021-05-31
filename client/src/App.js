@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
+import './App.css'
+import Welcome from './pages/Welcome';
+import Register from './pages/Register';
+import Login from './pages/Login';
+import NavBar from './components/NavBar';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+export const CredentialsContext = React.createContext();
 
 function App() {
+  const credentialsState = useState(null); 
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+
+      <CredentialsContext.Provider value={credentialsState}>
+        <div className="App">
+          <Router>
+            <NavBar />
+
+            <Switch>
+              <Route exact path='/'>
+                <Welcome/>
+              </Route>
+              <Route exact path='/register'>
+                <Register/>
+              </Route>
+              <Route exact path="/login">
+                <Login />
+              </Route>
+            </Switch>
+          </Router>
+        </div>
+      </CredentialsContext.Provider>
     </div>
   );
 }

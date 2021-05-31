@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { CredentialsContext } from '../App';
-// import Actions from '../components/Actions'
+import Actions from '../components/Actions'
 
-export default function Welcome() {
+export default function Main() {
   const [ credentials ] = useContext(CredentialsContext);
 
   return (
@@ -27,7 +27,7 @@ export default function Welcome() {
             </body>
 
             <div className="card-footer">
-              
+              {credentials && <Actions />} 
             </div>
           </div>    
         </div>      

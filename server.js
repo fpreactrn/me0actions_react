@@ -3,7 +3,7 @@ const app = express();
 require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
-const Action = require('./models/Action');
+const Actions = require('./models/Action');
 const port = process.env.PORT || 4009;
 
 mongoose.connect(process.env.dbUrl, {

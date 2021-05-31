@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css'
-import Welcome from './pages/Welcome';
+import Main from './pages/Main';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import NavBar from './components/NavBar';
@@ -21,7 +21,7 @@ function App() {
 
             <Switch>
               <Route exact path='/'>
-                <Welcome/>
+                <Main/>
               </Route>
               <Route exact path='/register'>
                 <Register/>
